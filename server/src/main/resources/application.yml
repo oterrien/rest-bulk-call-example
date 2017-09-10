@@ -1,0 +1,36 @@
+logging:
+  level:
+    org.springframework.web: WARN
+    com.ote.test: INFO
+
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: Server
+  main:
+    banner-mode: LOG
+  datasource:
+    url: jdbc:h2:./server/database/users
+    username: sa
+    password: admin
+    driver-class-name: org.h2.Driver
+    initialize: true
+#     initialize: false
+    continue-on-error: true
+    platform: h2
+  jpa:
+    show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#      ddl-auto: none
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+      path: /h2/console
+  error:
+    whitelabel.enabled: true
