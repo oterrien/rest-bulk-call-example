@@ -1,0 +1,15 @@
+logging:
+  level:
+    org.springframework.web: WARN
+    com.ote.test: INFO
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: Client
+
+remote:
+  server:
+    uri: http://localhost:8080
