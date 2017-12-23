@@ -1,1 +1,0 @@
-insert into USERS (LOGIN, PASSWORD) values ('root', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1);
