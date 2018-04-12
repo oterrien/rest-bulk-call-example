@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
@@ -28,4 +29,15 @@ public class RemoteUserService {
         ResponseEntity<UserPayload> res = restTemplate.getForEntity(serverUri + "/api/v1/users/" + id, UserPayload.class);
         return new AsyncResult<>(Optional.ofNullable(res).map(p -> p.getBody()));
     }
+
+    public String post(BulkUserRestController4.Params params) {
+        return restTemplate.postForEntity(serverUri + "/api/v1/test", params, String.class).getBody();
+
+    }
+
+    public List<Integer> get(String key) {
+        return (List<Integer>) restTemplate.getForEntity(serverUri + "/api/v1/test?key=" + key, List.class).getBody();
+    }
+
+
 }
