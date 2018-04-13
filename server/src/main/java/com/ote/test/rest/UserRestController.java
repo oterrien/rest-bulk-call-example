@@ -27,7 +27,7 @@ public class UserRestController {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserPayload create(@Valid @RequestBody UserPayload userPayload) {
@@ -36,7 +36,7 @@ public class UserRestController {
         return userMapperService.convert(userEntity);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserPayload read(@PathVariable("id") int id) {
@@ -49,14 +49,14 @@ public class UserRestController {
         return userMapperService.convert(userJpaRepository.findOne(id));
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserPayload> readAll() {
         return userMapperService.convert(userJpaRepository.findAll());
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserPayload update(@PathVariable("id") int id, @Valid @RequestBody UserPayload userPayload) {
@@ -66,19 +66,19 @@ public class UserRestController {
         return userMapperService.convert(userEntity);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
         userJpaRepository.delete(id);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAll() {
         userJpaRepository.deleteAll();
     }
 
-    @RequestMapping(value = "init/{max}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "init/{max}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public long init(@PathVariable("max") long max) {
 
@@ -96,7 +96,7 @@ public class UserRestController {
         return userJpaRepository.count();
     }
 
-    @RequestMapping(value = "add/{num}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "add/{num}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public long add(@PathVariable("num") long num) {
 

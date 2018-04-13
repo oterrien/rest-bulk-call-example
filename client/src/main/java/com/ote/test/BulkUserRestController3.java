@@ -23,7 +23,7 @@ public class BulkUserRestController3 {
     @Autowired
     private RemoteUserService remoteUserService;
 
-    @RequestMapping(value = "/{num}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{num}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserPayload> readAsync(@PathVariable("num") int num) {

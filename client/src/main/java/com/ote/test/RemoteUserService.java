@@ -3,12 +3,14 @@ package com.ote.test;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
@@ -23,6 +25,9 @@ public class RemoteUserService {
     @Value("${remote.server.uri}")
     private String serverUri;
 
+    @Autowired
+    private Environment environment;
+
     @Async
     public Future<Optional<UserPayload>> findOne(int id) {
         log.info("Find user #" + id);
@@ -30,14 +35,22 @@ public class RemoteUserService {
         return new AsyncResult<>(Optional.ofNullable(res).map(p -> p.getBody()));
     }
 
-    public String post(BulkUserRestController4.Params params) {
-        return restTemplate.postForEntity(serverUri + "/api/v1/test", params, String.class).getBody();
-
+    // used by BulkUserRestController4
+    @SuppressWarnings("unchecked")
+    public List<UserPayload> findMany(Params params) {
+        String key = restTemplate.postForEntity(serverUri + "/api/v1/users/post4", params, String.class).getBody();
+        return restTemplate.getForEntity(serverUri + "/api/v1/users/get4/" + key, List.class).getBody();
     }
 
-    public List<Integer> get(String key) {
-        return (List<Integer>) restTemplate.getForEntity(serverUri + "/api/v1/test?key=" + key, List.class).getBody();
-    }
+    @SuppressWarnings("unchecked")
+    public void findMany(Params params, String callbackUri) throws Exception {
 
+        String host = InetAddress.getLocalHost().getHostAddress();
+        String port = environment.getProperty("server.port");
+
+        String url = "http://" + host + ":" + port + callbackUri;
+
+        restTemplate.postForEntity(serverUri + "/api/v1/users/post5?callback=" + url, params, Void.class);
+    }
 
 }

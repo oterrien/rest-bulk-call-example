@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UserPayload {
 
     @JsonProperty

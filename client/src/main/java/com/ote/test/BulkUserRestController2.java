@@ -28,7 +28,7 @@ public class BulkUserRestController2 {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-    @RequestMapping(value = "/{num}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{num}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<UserPayload> readAsync(@PathVariable("num") int num) {
