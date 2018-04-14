@@ -27,23 +27,35 @@ public class BulkUserRestController5 {
     @ResponseBody
     public List<UserPayload> readAsync(@PathVariable("num") int num) throws Exception {
         String key = UUID.randomUUID().toString();
-        map.put(key, new Value());
-
-        Params params = new Params();
-        IntStream.range(0, num).mapToObj(i -> new Params.Param(i)).forEach(p -> params.getParams().add(p));
-        remoteUserService.findMany(params, "/api/v1/users/async5/callback/" + key);
-        /*while (!map.get(key).finished) {
-
-        }*/
-        Thread.sleep(20);
-        return map.get(key).payloads;
+        try {
+            map.put(key, new Value());
+            Params params = new Params();
+            IntStream.range(0, num).mapToObj(i -> new Params.Param(i)).forEach(p -> params.getParams().add(p));
+            remoteUserService.findMany(params, "/api/v1/users/async5/callback/" + key);
+            while (!map.get(key).finished) {
+            }
+            List<UserPayload> result = map.get(key).payloads;
+            log.info("Number of payloads: " + result.size());
+            return result;
+        } finally {
+            map.remove(key);
+        }
     }
 
     @PostMapping(value = "/callback/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void callBack(@RequestBody UserPayload userPayload, @PathVariable("key") String key) {
+        //log.info(key + ":" + userPayload.toString());
         map.get(key).payloads.add(userPayload);
+    }
+
+    @PutMapping(value = "/callback/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void finish(@PathVariable("key") String key) {
+        //log.info(key + "-> finished");
+        map.get(key).finished = true;
     }
 
 

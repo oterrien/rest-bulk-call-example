@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -31,16 +32,23 @@ public class UserAsync5RestController {
                             @RequestParam("callback") String callback) {
 
         CompletableFuture.runAsync(() -> process(params, callback));
-
     }
 
     private void process(Params params, String callback) {
+        AtomicInteger count = new AtomicInteger(0);
         log.info(callback);
-        params.getParams().
-                parallelStream().
-                map(p -> userJpaRepository.findOne(p.getId())).
-                map(p -> userMapperService.convert(p)).
-                peek(p -> log.info(p.toString())).
-                forEach(p -> restTemplate.postForEntity(callback, p, UserPayload.class));
+        try {
+            params.getParams().
+                    parallelStream().
+                    filter(p -> p.getId() % 2 == 0).
+                    map(p -> userJpaRepository.findOne(p.getId())).
+                    map(p -> userMapperService.convert(p)).
+                    filter(p -> p != null).
+                    peek(p -> count.getAndIncrement()).
+                    forEach(p -> restTemplate.postForEntity(callback, p, UserPayload.class));
+        } finally {
+            log.info("Number of payloads: " + count);
+            restTemplate.put(callback, null);
+        }
     }
 }
