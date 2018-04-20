@@ -13,3 +13,5 @@ spring:
 remote:
   server:
     uri: http://localhost:8080
+    activemq-uri: tcp://localhost:61616
+

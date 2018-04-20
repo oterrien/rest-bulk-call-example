@@ -24,3 +24,5 @@ spring:
     hibernate-naming:
       physical-strategy: org.hibernate.boot.mapper.naming.PhysicalNamingStrategyStandardImpl
     ddl-auto: create-drop
+
+server.activemq.port: 61616

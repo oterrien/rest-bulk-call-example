@@ -24,7 +24,7 @@ public class BulkUserRestController4 {
 
         Params params = new Params();
         IntStream.range(0, num).mapToObj(i -> new Params.Param(i)).forEach(p -> params.getParams().add(p));
-        return remoteUserService.findMany(params);
+        return remoteUserService.findMany4(params);
     }
 
 
